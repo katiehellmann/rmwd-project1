@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <title>Our simple HTTP server</title>
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <script>
+      // handle server responses and update content accordingly
+      const handleResponse = async (response, parseResponse) => {
+        const content = document.querySelector("#content");
+
+        // check response status and display the appropriate message
+        switch (response.status) {
+          case 200:
+            content.innerHTML = `<b>Success</b>`;
+            break;
+          case 201:
+            content.innerHTML = `<b>Created</b>`;
+            break;
+          case 400:
+            content.innerHTML = `<b>Bad Request</b>`;
+            break;
+          case 404:
+            content.innerHTML = `<b>Resource Not Found</b>`;
+            break;
+          default:
+            content.innerHTML = `Error code not implemented by client.`;
+            break;
+        }
+
+        // if the request was successful and a GET request, parse JSON and display data
+        if (parseResponse && response.status === 200) {
+          let obj = await response.json();
+          console.log(obj);
+          content.innerHTML += `<p>${JSON.stringify(obj.users)}</p>`;
+        } else {
+          // otherwise, log and display the error message
+          let obj = await response.json();
+          console.log(obj);
+          content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;
+        }
+      };
+
+      // send a GET request to update user data
+      const requestUpdate = async (userForm) => {
+        const url = userForm.querySelector("#urlField").value;
+        const method = userForm.querySelector("#methodSelect").value;
+
+        let response = await fetch(url, {
+          method,
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        handleResponse(response, method === "get");
+      };
+
+      // send a POST request to add a new user
+      const requestPost = async (nameForm) => {
+        const url = nameForm.getAttribute("action");
+        const method = nameForm.getAttribute("method");
+        const userName = nameForm.querySelector("#nameField").value;
+        const userAge = nameForm.querySelector("#ageField").value;
+        const formData = `name=${userName}&age=${userAge}`;
+
+        let response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded", // encode URL
+            Accept: "application/json",
+          },
+          body: formData, // send form data as request body
+        });
+
+        // handle the response after sending the POST request
+        handleResponse(response);
+      };
+
+      // initialize event listeners for form submissions
+      const init = () => {
+        const userForm = document.querySelector("#userForm");
+        const nameForm = document.querySelector("#nameForm");
+
+        // handle form submission for GET requests
+        const getUsers = (e) => {
+          e.preventDefault();
+          requestUpdate(userForm); // send GET request to fetch user data
+          return false;
+        };
+
+        // handle form submission for POST requests
+        const addUser = (e) => {
+          e.preventDefault();
+          requestPost(nameForm); // send POST request to add a user
+          return false;
+        };
+
+        // attach event listeners to forms
+        userForm.addEventListener("submit", getUsers);
+        nameForm.addEventListener("submit", addUser);
+      };
+
+      // run init function when the page loads
+      window.onload = init;
+    </script>
+  </head>
+
+  <body>
+    <section id="top">
+      <h3>POST Status Code Tests</h3>
+      <form id="nameForm" action="/addUser" method="post">
+        <label for="name">Name: </label>
+        <input id="nameField" type="text" name="name" />
+        <label for="age">Age: </label>
+        <input
+          id="ageField"
+          type="number"
+          name="age"
+          min="0"
+          max="100"
+          step="1"
+        />
+        <input type="submit" value="Add User" />
+      </form>
+
+      <form id="userForm" action="/getUsers" method="get">
+        <select id="urlField">
+          <option value="/getUsers">/getUsers</option>
+          <option value="/notReal">/notReal</option>
+        </select>
+        <select id="methodSelect">
+          <option value="get">GET</option>
+          <option value="head">HEAD</option>
+        </select>
+        <input type="submit" value="Get User" />
+      </form>
+    </section>
+    <section id="content"></section>
+  </body>
+</html>
