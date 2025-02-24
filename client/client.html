@@ -42,9 +42,9 @@
       };
 
       // send a GET request to update user data
-      const requestUpdate = async (userForm) => {
-        const url = userForm.querySelector("#urlField").value;
-        const method = userForm.querySelector("#methodSelect").value;
+      const requestUpdate = async (bookForm) => {
+        const url = bookForm.querySelector("#urlField").value;
+        const method = bookForm.querySelector("#methodSelect").value;
 
         let response = await fetch(url, {
           method,
@@ -60,9 +60,9 @@
       const requestPost = async (nameForm) => {
         const url = nameForm.getAttribute("action");
         const method = nameForm.getAttribute("method");
-        const userName = nameForm.querySelector("#nameField").value;
-        const userAge = nameForm.querySelector("#ageField").value;
-        const formData = `name=${userName}&age=${userAge}`;
+        const bookName = nameForm.querySelector("#nameField").value;
+        const bookAge = nameForm.querySelector("#ageField").value;
+        const formData = `name=${bookName}&age=${bookAge}`;
 
         let response = await fetch(url, {
           method,
@@ -79,26 +79,26 @@
 
       // initialize event listeners for form submissions
       const init = () => {
-        const userForm = document.querySelector("#userForm");
+        const bookForm = document.querySelector("#bookForm");
         const nameForm = document.querySelector("#nameForm");
 
         // handle form submission for GET requests
-        const getUsers = (e) => {
+        const getBooks = (e) => {
           e.preventDefault();
-          requestUpdate(userForm); // send GET request to fetch user data
+          requestUpdate(bookForm); // send GET request to fetch user data
           return false;
         };
 
         // handle form submission for POST requests
-        const addUser = (e) => {
+        const addBook = (e) => {
           e.preventDefault();
           requestPost(nameForm); // send POST request to add a user
           return false;
         };
 
         // attach event listeners to forms
-        userForm.addEventListener("submit", getUsers);
-        nameForm.addEventListener("submit", addUser);
+        bookForm.addEventListener("submit", getBook);
+        nameForm.addEventListener("submit", addBook);
       };
 
       // run init function when the page loads
@@ -107,33 +107,83 @@
   </head>
 
   <body>
+    <h1>book api</h1>
     <section id="top">
-      <h3>POST Status Code Tests</h3>
-      <form id="nameForm" action="/addUser" method="post">
-        <label for="name">Name: </label>
-        <input id="nameField" type="text" name="name" />
-        <label for="age">Age: </label>
-        <input
+      <h3>add book here</h3>
+      <form id="nameForm" action="/addBook" method="post">
+        <label for="name">Book Title: </label> 
+        <input id="nameField" type="text" name="name" /> <br>
+        <label for="age">Book Age: </label> 
+        <input id="ageField" type="text" name="age" /> <br>
+        <label for="genre">Book Genre: </label>
+        <input id="genreField" type="text" name="genre" placeholder="comma seperated!" /> <br>
+        <label for="author">Book Author: </label>
+        <input id="authorField" type="text" name="author" /> <br>
+        <label for="language">Book Language: </label>
+        <input id="languageField" type="text" name="language" /> <br>
+        <label for="pages">Amount of Pages: </label>
+        <input id="pagesField" type="text" name="pages" /> <br>
+        <label for="read">Read: </label>
+        <select id="reasSelect" name="read">
+          <option value="no">No</option>
+          <option value="yes">Yes, Have Read</option>
+        </select>
+        <!-- <input
           id="ageField"
           type="number"
           name="age"
           min="0"
           max="100"
           step="1"
-        />
-        <input type="submit" value="Add User" />
+        /> -->
+        <input type="submit" value="Add Book" />
       </form>
-
-      <form id="userForm" action="/getUsers" method="get">
-        <select id="urlField">
-          <option value="/getUsers">/getUsers</option>
+      <h3>search books here</h3>
+      <form id="bookForm" action="/getBooks" method="get">
+        <!-- <select id="urlField">
+          <option value="/getBooks">/getBooks</option>
           <option value="/notReal">/notReal</option>
+        </select> -->
+        <br>
+        <!-- would refacot to dynamically fill the selects out, but you get the premise -->
+        <select id="countrySelect">
+          <option value="Achaemenid Empire">Achaemenid Empire</option>
+          <option value="Iceland">Iceland</option>
+          <option value="Italy">Italy</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="United States">United States</option>
         </select>
-        <select id="methodSelect">
-          <option value="get">GET</option>
-          <option value="head">HEAD</option>
+        <input type="submit" value="Get Books By Country" />
         </select>
-        <input type="submit" value="Get User" />
+        <br>
+        <select id="genreSelect">
+          <option value="Romance">Romance</option>
+          <option value="Poetry">Poetry</option>
+          <option value="Fantasy">Fantasy</option>
+          <option value="Realism">Realism</option>
+          <option value="Modernism">Modernism</option>
+        </select>
+        <input type="submit" value="Get Books By Genre" />
+        </select>
+        <br>
+                <input id="getByAuthor" type="text" name="getAuthor" />
+        <input type="submit" value="Get Books By Author" />
+        </select>
+        <br>
+        <select id="getAgeSelect" name="getAge">
+          <option value="no">1800-1900</option>
+          <option value="yes">1900-2000</option>
+        </select>
+        <input type="submit" value="Get Books By Timeframe" />
+        </select>
+        <br>
+        <select id="getReadSelect" name="getRead">
+          <option value="no">No</option>
+          <option value="yes">Yes, Have Read</option>
+        </select>
+        <input type="submit" value="Get Books By Read" />
+        </select>
+
       </form>
     </section>
     <section id="content"></section>

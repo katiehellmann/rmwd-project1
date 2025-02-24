@@ -1,0 +1,18 @@
+Project 1 Milestone Responses
+What dataset are you using?
+I will be using the provided Books dataset. 
+I plan to be able to filter the books by author, language, year (time frame) and genre. In addition, the user should be able to add a book and mark books as 'read'.
+
+What work has been completed for this milestone?
+The client page (HTML) has been updates to reflect the endpoints, including both the get and post requests. At the moment, every submit button returns an error.
+
+What work is left, and how do you plan to complete it?
+I have to implement the functionally that returns/posts endpoint data. I essentally need to make it functional.
+Do you have a plan for going above and beyond? If so, what is it?
+I plan to customize the frontend (styling) of the api to be more user friendly and potentially look like a bookshelf/library. This will most likely come in the form of using TailwindCSS or a similar framework.
+
+If you used any borrowed code or code fragments, where did you get them from?
+The majority of the current code has been copied from the previous HTTP API Assignments/parsing demos. It will need to be refactored to properly handle the endpoints listed above.
+
+What do the code fragments do? Where are they in your code?
+There are fragments in the following files: htmlResponse.js, jsonResponses.js and server.js. As mentioned above, they are referenced from demos given to us in class!
