@@ -1,7 +1,15 @@
-const users = {};
+const fs = require('fs');
+const path = require('path');
+
+// load book data
+let bookData = require('../data/books.json');
+
+// function to save data back to the JSON file
+const saveBookData = () => {
+  fs.writeFileSync(path.join(__dirname, '../data/books.json'), JSON.stringify(bookData, null, 2), 'utf-8');
+};
 
 // a function that sends JSON responses
-// includes that status code and the object to return
 const jsonResponse = (req, res, status, object) => {
   const content = JSON.stringify(object);
 
@@ -11,7 +19,7 @@ const jsonResponse = (req, res, status, object) => {
   };
   res.writeHead(status, headers);
 
-  // only write content if head
+  // only write content if it's not a HEAD request
   if (req.method !== 'HEAD') {
     res.write(content);
   }
@@ -19,43 +27,47 @@ const jsonResponse = (req, res, status, object) => {
   res.end();
 };
 
-// a function that gets users and returns the correct responses
-const getUsers = (req, res) => {
+// function to get bookData and return the correct responses
+const getBook = (req, res) => {
   const responseJSON = {
-    users,
+    bookData,
   };
   return jsonResponse(req, res, 200, responseJSON);
 };
 
-// a function that adds a user based on form input
-const addUser = (req, res) => {
-  // default
+// function to add a new book based on form input
+const addBook = (req, res) => {
+  // default response
   const responseJSON = {
-    message: 'Name and age are required.',
+    message: 'All forms required.',
   };
 
-  const { name, age } = req.body;
-  // make sure there is inputs, otherwise continue
-  if (!name || !age) {
+  const { name, age, genre, author, language, pages, read } = req.body;
+
+  // check if all required fields are present
+  if (!name || !age || !genre || !author || !language || !pages || !read) {
     responseJSON.id = 'missingParams';
     return jsonResponse(req, res, 400, responseJSON);
   }
 
   let responseCode = 204;
 
-  // if there are no users by the inputted name,
-  // add them to the list and send the appropriate res code
-  if (!users[name]) {
+  // if there is no book data with the inputted name, add it to the list
+  if (!bookData.some(book => book.name === name)) {
     responseCode = 201;
-    users[name] = {
-      name,
-    };
+    const newBook = { name, age, genre, author, language, pages, read };
+    bookData.push(newBook);
+
+    // save the updated book data to the file
+    saveBookData();
+
+    console.log("Added book:", newBook);
+  } else {
+    responseJSON.message = 'Book with that name already exists.';
+    return jsonResponse(req, res, 409, responseJSON);
   }
 
-  // otherwise, if they do exist, update their age (assuming no one has the same name)
-  users[name].age = age;
-
-  // if we were successful, return the data
+  // if successful, return the data
   if (responseCode === 201) {
     responseJSON.message = 'Created Successfully!';
     return jsonResponse(req, res, responseCode, responseJSON);
@@ -64,7 +76,7 @@ const addUser = (req, res) => {
   return jsonResponse(req, res, responseCode, {});
 };
 
-// a function that handles a page that doesnt exist and returns the appropriate message
+// function to handle a page that doesn't exist and return the appropriate message
 const notFound = (req, res) => {
   const responseJSON = {
     message: "The page you are looking for doesn't exist.",
@@ -74,9 +86,9 @@ const notFound = (req, res) => {
   jsonResponse(req, res, 404, responseJSON);
 };
 
-// export
+// Export functions
 module.exports = {
-  getUsers,
-  addUser,
+  getBook,
+  addBook,
   notFound,
 };

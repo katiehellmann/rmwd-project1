@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const INDEX = fs.readFileSync(`${__dirname}/../client/client.html`);
-const CSS = fs.readFileSync(`${__dirname}/../client/style.css`);
+const CSS = fs.readFileSync(`${__dirname}/../client/output.css`);
 
 // a function to serve the index webpage
 const getIndex = (req, res) => {

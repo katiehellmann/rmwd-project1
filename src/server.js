@@ -10,8 +10,13 @@ const PORT = process.env.PORT || process.env.NODE_PORT || 3000;
 const urlStruct = {
   '/': htmlHandler.getIndex,
   '/style.css': htmlHandler.getCSS,
-  '/addUser': jsonHandler.addUser,
-  '/getUsers': jsonHandler.getUsers,
+  '/addBook': jsonHandler.addBook,
+  '/getBook': jsonHandler.getBook,
+  '/getByCountry': jsonHandler.getCountry,
+  '/getByGenre': jsonHandler.getGenre,
+  '/getByAuthor': jsonHandler.getAuthor,
+  '/getByCentury': jsonHandler.getCentury,
+  '/getByRead': jsonHandler.getRead,
   notFound: jsonHandler.notFound,
 };
 

@@ -1,17 +1,18 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 html, body {
   height: 100%;
   width: 100%;
   margin: 0;
-  padding: 0;
+  padding: 1em;
 }
 
-#top {
-  text-align: center;
+#top #search, h1 {
+  text-align: left;
   margin: 0 auto;
-}
-
-#top h1 {
-  font-size: 2em;
+  line-height: 2.8;
 }
 
 #content {
@@ -19,5 +20,27 @@ html, body {
   font-size: 2em;
   text-align: center;
 }
+
+@theme {
+  --color-sage: #593c39;
+  --color-offwhite: #ffe0b2;
+  --color-coffee: #4b371c;
+  --color-hunter: #3d2b1f;
+}
+
+@layer components {
+  .tinput{
+  @apply bg-offwhite w-50 border border-gray-300 text-coffee text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500;
+  } 
+  .binput{
+    @apply bg-transparent w-55 hover:bg-coffee text-offwhite font-semibold hover:text-white px-4 border border-white hover:border-transparent rounded;
+  }
+  .sinput{
+    @apply bg-offwhite w-50 border border-gray-300 text-coffee text-sm rounded-lg focus:ring-blue-500 focus:border-green-500;
+  }
+  .box{
+    @apply block p-6 my-4 bg-sage rounded-lg shadow-sm dark:bg-sage w-full;
+  }
+  }
 
 
