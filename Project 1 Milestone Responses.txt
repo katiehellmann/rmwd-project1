@@ -1,18 +1,22 @@
 Project 1 Milestone Responses
 What dataset are you using?
-I will be using the provided Books dataset. 
-I plan to be able to filter the books by author, language, year (time frame) and genre. In addition, the user should be able to add a book and mark books as 'read'.
+I will be using the provided Books dataset found in the myCourses Shell.
 
-What work has been completed for this milestone?
-The client page (HTML) has been updates to reflect the endpoints, including both the get and post requests. At the moment, every submit button returns an error.
+What went right in the development of this project?
+I was readily able to write to files appropriately. I also liked styling the UI even though I didn't completely style the outputs. I also ended up rehauling the html from the borrowed http api assignment so I could better understand what was going on inside of it.
 
-What work is left, and how do you plan to complete it?
-I have to implement the functionally that returns/posts endpoint data. I essentally need to make it functional.
-Do you have a plan for going above and beyond? If so, what is it?
-I plan to customize the frontend (styling) of the api to be more user friendly and potentially look like a bookshelf/library. This will most likely come in the form of using TailwindCSS or a similar framework.
+
+What went wrong in the development of this project?
+Somewhere during my process I accidently changed the response object and it took me a very long while to figure out which function I did so in. It ended up being an error with how I was sending objects into the parsing function. 
+
+What did you learn while developing this project?
+I shouldn't be developing is long stints. I need to take a step back so I can has fresh eyes on my errors. I also was able to better learn GET, HEAD, and POST requests.
+
+If you went above and beyond, how did you do so?
+I know this isn't the most 'beyond' work, but I chose to add styling with the TailwindCSS framework! 
 
 If you used any borrowed code or code fragments, where did you get them from?
-The majority of the current code has been copied from the previous HTTP API Assignments/parsing demos. It will need to be refactored to properly handle the endpoints listed above.
+There may be some residual logs for debugging courtesy of ChatGPT. There is also some from the previous http api assignments/parsing demos.
 
 What do the code fragments do? Where are they in your code?
-There are fragments in the following files: htmlResponse.js, jsonResponses.js and server.js. As mentioned above, they are referenced from demos given to us in class!
+The logs ensure the code is working correctly and still returning the correct response output. In addition, there are a few methods that I denoted in the milestone- htmlResponses.js, jsonResponses.js, and server,js either reference code from the parsing demo or sets up serving files the way that the http api assignments do. 

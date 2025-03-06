@@ -1,8 +1,8 @@
-const fs = require("fs");
-const http = require("http");
+const fs = require('fs');
+const http = require('http');
 
 // load book data
-const bookData = require("../data/books.json");
+const bookData = require('../data/books.json');
 
 // a function that sends JSON responses
 const respondJSON = (req, res, status, object) => {
@@ -13,14 +13,14 @@ const respondJSON = (req, res, status, object) => {
 
   // res headers
   const headers = {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
 
   // Write the header
   res.writeHead(status, headers);
 
   // Only write content if it's not a HEAD request
-  if (req.method !== "HEAD") {
+  if (req.method !== 'HEAD') {
     res.write(content);
   }
 
@@ -36,34 +36,34 @@ const getBook = (req, res) => {
 
 // a function to get books by author
 const getAuthor = (req, res, parsedUrl) => {
-  const author = parsedUrl.searchParams.get("author");
+  const author = parsedUrl.searchParams.get('author');
   const result = bookData.find(
-    (b) => b.author.toLowerCase() === author.toLowerCase()
+    (b) => b.author.toLowerCase() === author.toLowerCase(),
   );
   // if we find something, return it - otherwise send an error
   if (result) {
     return respondJSON(req, res, 200, result);
   }
   return respondJSON(req, res, 404, {
-    message: "No Books by that author found.",
-    id: "notFound",
+    message: 'No Books by that author found.',
+    id: 'notFound',
   });
 };
 
 // a function to get books byt country
 const getCountry = (req, res, parsedUrl) => {
-  const country = parsedUrl.searchParams.get("country");
+  const country = parsedUrl.searchParams.get('country');
 
   if (!country) {
     return respondJSON(req, res, 404, {
-      message: "No books found in that country.",
-      id: "notFound",
+      message: 'No books found in that country.',
+      id: 'notFound',
     });
   }
 
   try {
     const result = bookData.find(
-      (b) => b.country.toLowerCase() === country.toLowerCase()
+      (b) => b.country.toLowerCase() === country.toLowerCase(),
     );
 
     if (result) {
@@ -71,38 +71,38 @@ const getCountry = (req, res, parsedUrl) => {
     }
 
     return respondJSON(req, res, 404, {
-      message: "No books found in that country.",
-      id: "notFound",
+      message: 'No books found in that country.',
+      id: 'notFound',
     });
   } catch (error) {
-    console.error("Error in getCountry:", error);
+    console.error('Error in getCountry:', error);
 
     return respondJSON(req, res, 500, {
-      message: "Internal Server Error",
-      id: "serverError",
+      message: 'Internal Server Error',
+      id: 'serverError',
     });
   }
 };
 
 // a function to get books byt genre
 const getGenre = (req, res, parsedUrl) => {
-  const genres = parsedUrl.searchParams.get("genre");
+  const genres = parsedUrl.searchParams.get('genre');
   const results = bookData.filter((b) => b.genres && b.genres.includes(genres));
   // if we find something, return it - otherwise send an error
   if (results.length > 0) {
     return respondJSON(req, res, 200, results);
   }
   return respondJSON(req, res, 404, {
-    message: "No Books found from that genre.",
-    id: "notFound",
+    message: 'No Books found from that genre.',
+    id: 'notFound',
   });
 };
 
 // a function to get books by title
 const getTitle = (req, res, parsedUrl) => {
-  const title = parsedUrl.searchParams.get("title");
+  const title = parsedUrl.searchParams.get('title');
   const results = bookData.find(
-    (b) => b.title.toLowerCase() === title.toLowerCase()
+    (b) => b.title.toLowerCase() === title.toLowerCase(),
   );
   // if we find something, return it - otherwise send an error
   if (results) {
@@ -110,10 +110,10 @@ const getTitle = (req, res, parsedUrl) => {
   }
 
   // Log before sending error response
-  console.log("No books found, sending error response");
+  console.log('No books found, sending error response');
   return respondJSON(req, res, 404, {
-    message: "No Books found with that title.",
-    id: "notFound",
+    message: 'No Books found with that title.',
+    id: 'notFound',
   });
 };
 
@@ -124,8 +124,8 @@ const addBook = (req, res) => {
   // are all fields provided
   if (!newBook.title || !newBook.author) {
     return respondJSON(req, res, 400, {
-      message: "Missing required Book data",
-      id: "badRequest",
+      message: 'Missing required Book data',
+      id: 'badRequest',
     });
   }
 
@@ -137,37 +137,39 @@ const addBook = (req, res) => {
 
   // write to file
   return fs.writeFile(
-    "./data/books.json",
+    './data/books.json',
     JSON.stringify(bookData, null, 2),
     (err) => {
       if (err) {
         return respondJSON(req, res, 500, {
-          message: "Error saving book data",
-          id: "serverError",
+          message: 'Error saving book data',
+          id: 'serverError',
         });
       }
       return respondJSON(req, res, 201, {
-        message: "book added successfully",
+        message: 'book added successfully',
         book: newBook,
       });
-    }
+    },
   );
 };
 
 // a function to save books to a 'have read' list
 const readBook = (req, res) => {
-  const { title, author, genre, language, pages } = req.body;
+  const {
+    title, author, genre, language, pages,
+  } = req.body;
 
   if (!title || !author || !genre || !language || !pages) {
     return respondJSON(req, res, 400, {
-      message: "Missing required book data",
-      id: "badRequest",
+      message: 'Missing required book data',
+      id: 'badRequest',
     });
   }
 
   // console.log(title);
   // get the data from the the read json
-  return fs.readFile("./data/readBooks.json", (err, data) => {
+  return fs.readFile('./data/readBooks.json', (err, data) => {
     const readBooks = err ? [] : JSON.parse(data);
 
     // none can be the same
@@ -181,25 +183,25 @@ const readBook = (req, res) => {
       });
 
       return fs.writeFile(
-        "./data/readBooks.json",
+        './data/readBooks.json',
         JSON.stringify(readBooks, null, 2),
         (writeErr) => {
           if (writeErr) {
             return respondJSON(req, res, 500, {
-              message: "Error saving read book",
-              id: "serverError",
+              message: 'Error saving read book',
+              id: 'serverError',
             });
           }
 
           return respondJSON(req, res, 201, {
-            message: "Book marked as read successfully",
+            message: 'Book marked as read successfully',
           });
-        }
+        },
       );
     }
     return respondJSON(req, res, 400, {
-      message: "Book already marked as read",
-      id: "duplicate",
+      message: 'Book already marked as read',
+      id: 'duplicate',
     });
   });
 };
@@ -208,7 +210,7 @@ const readBook = (req, res) => {
 const notFound = (req, res) => {
   const responseJSON = {
     message: "The page you are looking for doesn't exist.",
-    id: "notFound",
+    id: 'notFound',
   };
 
   respondJSON(req, res, 404, responseJSON);
