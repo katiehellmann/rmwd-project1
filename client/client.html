@@ -3,12 +3,214 @@
   <head>
     <title>Simple Book API</title>
     <link href="./style.css" rel="stylesheet" />
-    <script>
-      // handle server responses and update content accordingly
-      const handleResponse = async (response, parseResponse) => {
-        const content = document.querySelector("#content");
+  </head>
+  <body class="bg-hunter text-black p-6">
+    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
+      <h1 class="text-2xl font-bold mb-4">Book API</h1>
 
-        // check response status and display the appropriate message
+      <label for="searchTitle" class="block font-semibold"
+        >Search Book by Title:</label
+      >
+      <input
+        type="text"
+        id="searchTitle"
+        placeholder="Enter Book Title"
+        class="border p-2 rounded w-full mb-2"
+      />
+      <button
+        onclick="searchBookByTitle('get')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Get
+      </button>
+      <button
+        onclick="searchBookByTitle('head')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Head
+      </button>
+
+      <label for="searchAuthor" class="block font-semibold mt-4"
+        >Search Book by Author:</label
+      >
+      <input
+        type="text"
+        id="searchAuthor"
+        placeholder="Enter Author Name"
+        class="border p-2 rounded w-full mb-2"
+      />
+      <button
+        onclick="searchBookByAuthor('get')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Get
+      </button>
+      <button
+        onclick="searchBookByAuthor('head')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Head
+      </button>
+
+      <label for="searchGenre" class="block font-semibold mt-4"
+        >Search Book by Genre:</label
+      >
+      <input
+        type="text"
+        id="searchGenre"
+        placeholder="Enter Genre"
+        class="border p-2 rounded w-full mb-2"
+      />
+      <button
+        onclick="searchBookByGenre('get')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Get
+      </button>
+      <button
+        onclick="searchBookByGenre('head')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Head
+      </button>
+
+      <label for="searchCountry" class="block font-semibold mt-4"
+        >Search Book by Country:</label
+      >
+      <input
+        type="text"
+        id="searchCountry"
+        placeholder="Enter Genre"
+        class="border p-2 rounded w-full mb-2"
+      />
+      <button
+        onclick="searchBookByCountry('get')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Get
+      </button>
+      <button
+        onclick="searchBookByCountry('head')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Head
+      </button>
+
+      <label for="searchRead" class="block font-semibold mt-4"
+        >Search Book by marked Read:</label
+      >
+      <input
+        type="text"
+        id="searchRead"
+        placeholder="Enter Genre"
+        class="border p-2 rounded w-full mb-2"
+      />
+      <button
+        onclick="searchBookByRead('get')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Get
+      </button>
+      <button
+        onclick="searchBookByRead('head')"
+        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+      >
+        Head
+      </button>
+
+      <h2 class="text-xl font-bold mt-6">Add Book</h2>
+      <form id="addBookForm" class="space-y-2">
+        <input
+          type="text"
+          id="newTitle"
+          placeholder="Title"
+          class="border p-2 rounded w-full"
+        />
+        <input
+          type="text"
+          id="newAuthor"
+          placeholder="Author"
+          class="border p-2 rounded w-full"
+        />
+        <input
+          type="text"
+          id="newGenre"
+          placeholder="Genre (comma-separated)"
+          class="border p-2 rounded w-full"
+        />
+        <input
+          type="text"
+          id="newLanguage"
+          placeholder="Language"
+          class="border p-2 rounded w-full"
+        />
+        <input
+          type="number"
+          id="newPages"
+          placeholder="Number of Pages"
+          class="border p-2 rounded w-full"
+        />
+        <select id="newRead" class="border p-2 rounded w-full">
+          <option value="no">No</option>
+          <option value="yes">Yes, Have Read</option>
+        </select>
+        <button
+          type="button"
+          onclick="addBook()"
+          class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+        >
+          Add Book
+        </button>
+      </form>
+      <h2 class="text-xl font-bold mt-6">Add Book To Read List</h2>
+      <form id="addReadForm" class="space-y-2">
+        <input
+          type="text"
+          id="readTitle"
+          placeholder="Title"
+          class="border p-2 rounded w-full"
+        />
+        <input
+          type="text"
+          id="readAuthor"
+          placeholder="Author"
+          class="border p-2 rounded w-full"
+        />
+        <input
+          type="text"
+          id="readGenre"
+          placeholder="Genre (comma-separated)"
+          class="border p-2 rounded w-full"
+        />
+        <input
+          type="text"
+          id="readLanguage"
+          placeholder="Language"
+          class="border p-2 rounded w-full"
+        />
+        <input
+          type="number"
+          id="readPages"
+          placeholder="Number of Pages"
+          class="border p-2 rounded w-full"
+        />
+        <button
+          type="button"
+          onclick="addRead()"
+          class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
+        >
+          Add Book To Read
+        </button>
+      </form>
+
+      <div id="output" class="mt-4"></div>
+    </div>
+
+    <script>
+      const handleResponse = async (response, parseResponse) => {
+        const content = document.querySelector("#output");
+
+        // Handle status messages
         switch (response.status) {
           case 200:
             content.innerHTML = `<b>Success</b>`;
@@ -27,192 +229,151 @@
             break;
         }
 
-        // if the request was successful and a GET request, parse JSON and display data
+        // check if response has a body
+        let obj;
         if (parseResponse && response.status === 200) {
-          let obj = await response.json();
+          obj = await response.json();
           console.log(obj);
           content.innerHTML += `<p>${JSON.stringify(obj)}</p>`;
-        } else {
-          // otherwise, log and display the error message
-          let obj = await response.json();
+        } else if (response.status !== 204) {
+          obj = await response.json();
           console.log(obj);
           content.innerHTML += `<p>Message: ${JSON.stringify(obj.message)}</p>`;
         }
       };
 
-      // send a GET request to update user data
-      const requestUpdate = async (userForm) => {
-        const url = bookForm.querySelector("#urlField").value;
-        const method = bookForm.querySelector("#methodSelect").value;
+      async function searchBookByTitle(method) {
+        const title = document.getElementById("searchTitle").value;
+        let response;
 
-        let response = await fetch(url, {
-          method,
-          headers: {
-            Accept: "application/json",
-          },
+        if (method === "get") {
+          response = await fetch(`/getBookByTitle?title=${title}`);
+        } else {
+          response = await fetch(`/getBookByTitle?title=${title}`, {
+            method: "HEAD",
+          });
+        }
+
+        await handleResponse(response, method === "get");
+      }
+
+      async function searchBookByAuthor(method) {
+        const author = document.getElementById("searchAuthor").value;
+        let response;
+        if (method == "get") {
+          response = await fetch(`/getBookByAuthor?author=${author}`);
+        } else {
+          response = await fetch(
+            `/getBookByAuthor?author=${author}, { method: 'HEAD' }`
+          );
+        }
+        await handleResponse(response, method === "get");
+      }
+
+      async function searchBookByRead(method) {
+        const read = document.getElementById("searchRead").value;
+        let response;
+        if (method == "get") {
+          response = await fetch(`/getBookByRead?read=${read}`);
+        } else {
+          response = await fetch(
+            `/getBookByRead?read=${read}, { method: 'HEAD' }`
+          );
+        }
+        await handleResponse(response, method === "get");
+
+      }
+
+      async function searchBookByGenre(method) {
+        const genre = document.getElementById("searchGenre").value;
+        let response;
+        if (method == "get") {
+          response = await fetch(`/getBookByGenre?genre=${genre}`);
+        } else {
+          response = await fetch(
+            `/getBookByGenre?genre=${genre}, { method: 'HEAD' }`
+          );
+        }
+        await handleResponse(response, method === "get");
+
+      }
+
+      async function searchBookByCountry(method) {
+        const country = document.getElementById("searchCountry").value;
+        let response;
+        if (method == "get") {
+          response = await fetch(`/getBookByCountry?country=${country}`);
+        } else {
+          response = await fetch(
+            `/getBookByCountry?country=${country}, { method: 'HEAD' }`
+          );
+        }
+        await handleResponse(response, method === "get");
+
+      }
+
+      async function addBook() {
+        const title = document.getElementById("newTitle").value;
+        const author = document.getElementById("newAuthor").value;
+        const genre = document
+          .getElementById("newGenre")
+          .value.split(",")
+          .map((g) => g.trim());
+        const language = document.getElementById("newLanguage").value;
+        const pages = document.getElementById("newPages").value;
+        const read = document.getElementById("newRead").value;
+
+        if (!title || !author || !genre.length || !language || !pages) {
+          document.getElementById("output").innerHTML =
+            "<p class='text-red-500'>Please fill in all fields.</p>";
+          return;
+        }
+
+        const newBook = { title, author, genre, language, pages, read };
+
+        const response = await fetch("/addBook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newBook),
         });
 
-        handleResponse(response, method === "get");
-      };
+        const result = await response.json();
+        document.getElementById(
+          "output"
+        ).innerHTML = `<p class='text-green-500'>${result.message}</p>`;
+      }
 
-      // send a POST request to add a new book
-      const requestPost = async (nameForm) => {
-        const url = nameForm.getAttribute("action");
-        const method = nameForm.getAttribute("method");
-        const bookName = nameForm.querySelector("#nameField").value;
-        const bookAge = nameForm.querySelector("#ageField").value;
-        const bookGenre = nameForm.querySelector("#genreField").value;
-        const bookAuthor = nameForm.querySelector("#authorField").value;
-        const bookLanguage = nameForm.querySelector("#languageField").value;
-        const bookPages = nameForm.querySelector("#pagesField").value;
-        const bookRead = nameForm.querySelector("#readSelect").value;
-        const formData = `name=${bookName}&age=${bookAge}&genre=${bookGenre}&author=${bookAuthor}
-        &language=${bookLanguage}&pages=${bookPages}&read=${bookRead}`;
-        console.log("did something!");
-        let response = await fetch(url, {
-          method,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded", // encode URL
-            Accept: "application/json",
-          },
-          body: formData, // send form data as request body
+      async function addRead() {
+        const title = document.getElementById("readTitle").value;
+        const author = document.getElementById("readAuthor").value;
+        const genre = document
+          .getElementById("readGenre")
+          .value.split(",")
+          .map((g) => g.trim());
+        const language = document.getElementById("readLanguage").value;
+        const pages = document.getElementById("readPages").value;
+
+        if (!title || !author || !genre.length || !language || !pages) {
+          document.getElementById("output").innerHTML =
+            "<p class='text-red-500'>Please fill in all fields.</p>";
+          return;
+        }
+
+        const readBook = { title, author, genre, language, pages };
+
+        const response = await fetch("/readBook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, author, genre, language, pages }),
         });
 
-        // handle the response after sending the POST request
-        handleResponse(response);
-      };
+        const result = await response.json();
+        console.log(result);
+        document.getElementById(
+          "output"
+        ).innerHTML = `<p class='text-green-500'>${result.message}</p>`;
+      }
 
-      // initialize event listeners for form submissions
-      const init = () => {
-        const bookForm = document.querySelector("#bookForm");
-        const nameForm = document.querySelector("#nameForm");
-
-        // handle form submission for GET requests
-        const getBook = (e) => {
-          e.preventDefault();
-          requestUpdate(); // send GET request to fetch books data
-          return false;
-        };
-
-        // handle form submission for POST requests
-        const addBook = (e) => {
-          e.preventDefault();
-          requestPost(nameForm); // send POST request to add a book
-          return false;
-        };
-
-        // attach event listeners to forms
-        bookForm.addEventListener("submit", getBook);
-        nameForm.addEventListener("submit", addBook);
-      };
-
-      // run init function when the page loads
-      window.onload = init;
     </script>
-  </head>
-
-  <body class="bg-hunter text-white">
-    <h1 class="font-serif p-6 text-4xl text-offwhite font-extrabold">
-      book api
-    </h1>
-    <section id="top" class="box">
-      <h3 class="text-xl text-white font-bold">Add a Book:</h3>
-      <form id="nameForm" action="/addBook" method="post">
-        <label for="name">Book Title: </label>
-        <input id="nameField" type="text" name="name" class="tinput" /> <br />
-        <label for="age">Book Age: </label>
-        <input id="ageField" type="text" name="age" class="tinput" /> <br />
-        <label for="genre">Book Genre: </label>
-        <input
-          id="genreField"
-          type="text"
-          name="genre"
-          placeholder="comma separated!"
-          class="tinput"
-        />
-        <br />
-        <label for="author">Book Author: </label>
-        <input id="authorField" type="text" name="author" class="tinput" />
-        <br />
-        <label for="language">Book Language: </label>
-        <input id="languageField" type="text" name="language" class="tinput" />
-        <br />
-        <label for="pages">Amount of Pages: </label>
-        <input id="pagesField" type="text" name="pages" class="tinput" /> <br />
-        <label for="read">Read: </label>
-        <select id="readSelect" name="read" class="sinput">
-          <option value="no">No</option>
-          <option value="yes">Yes, Have Read</option>
-        </select>
-        <br />
-        <br />
-        <input type="submit" value="Add Book" class="binput" />
-      </form>
-    </section>
-
-    <section id="search" class="box">
-      <h3 class="text-xl text-white font-bold">Filters:</h3>
-      <form id="bookForm" action="/getBook" method="get">
-        <label for="getByAuthor">Author: </label>
-        <input
-          id="getByAuthor"
-          type="text"
-          name="getAuthor"
-          placeholder="enter author name"
-          class="tinput"
-        />
-
-        <label for="getByCountry">Country: </label>
-        <input
-          id="getByCountry"
-          type="text"
-          name="getCountry"
-          placeholder="enter country name"
-          class="tinput"
-        />
-
-        <label for="getByGenre">Genre: </label>
-        <input
-          id="getByGenre"
-          type="text"
-          name="getGenre"
-          placeholder="enter genre name"
-          class="tinput"
-        />
-
-        <label for="getByAge">Century: </label>
-        <select id="getByAge" name="getAge" class="sinput">
-          <option value=""></option>
-          <option value="-1300">before 1300</option>
-          <option value="1301-1400">1300-1400</option>
-          <option value="1401-1500">1401-1500</option>
-          <option value="1501-1600">1501-1600</option>
-          <option value="1601-1700">1601-1700</option>
-          <option value="1701-1800">1701-1800</option>
-          <option value="1801-1900">1801-1900</option>
-          <option value="1901-2000">1901-2000</option>
-          <option value="+2000">2001 and later</option>
-        </select>
-
-        <label for="getByRead">Have Read: </label>
-        <select id="getByRead" name="getRead" class="sinput">
-          <option value="no">No</option>
-          <option value="yes">Yes, Have Read</option>
-        </select>
-        <br />
-        <br />
-        <select id="methodSelect" class="sinput">
-          <option value="get">GET</option>
-          <option value="head">HEAD</option>
-        </select>
-        <select id="urlField" class="sinput">
-          <option value="/getBook">/getBook</option>
-          <option value="/notReal">/notReal</option>
-        </select>
-        <input type="submit" value="Search Books" class="binput" />
-      </form>
-    </section>
-
-    <section id="content" class="box"></section>
   </body>
 </html>

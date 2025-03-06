@@ -1,22 +1,24 @@
 const http = require('http');
-const query = require('querystring');
+// const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
 
 // set the server port
-const PORT = process.env.PORT || process.env.NODE_PORT || 3000;
+const PORT = process.env.PORT || process.env.NODE_PORT || 3001;
 
 // map URL paths to their respective handlers
 const urlStruct = {
   '/': htmlHandler.getIndex,
   '/style.css': htmlHandler.getCSS,
   '/addBook': jsonHandler.addBook,
+  '/readBook': jsonHandler.readBook,
   '/getBook': jsonHandler.getBook,
-  '/getByCountry': jsonHandler.getCountry,
-  '/getByGenre': jsonHandler.getGenre,
-  '/getByAuthor': jsonHandler.getAuthor,
-  '/getByCentury': jsonHandler.getCentury,
-  '/getByRead': jsonHandler.getRead,
+  '/getBookByCountry': jsonHandler.getCountry,
+  '/getBookByGenre': jsonHandler.getGenre,
+  '/getBookByAuthor': jsonHandler.getAuthor,
+  '/getSearchBookByRead': jsonHandler.getRead,
+  '/getBookByTitle': jsonHandler.getTitle,
+
   notFound: jsonHandler.notFound,
 };
 
@@ -38,39 +40,36 @@ const parseBody = (request, response, handler) => {
 
   request.on('end', () => {
     const bodyString = Buffer.concat(body).toString();
-    request.body = query.parse(bodyString);
+    request.body = JSON.parse(bodyString);
     handler(request, response);
   });
 };
 
 // handle POST requests
 const handlePost = (request, response, parsedUrl) => {
-  if (parsedUrl.pathname === '/addUser') {
-    parseBody(request, response, jsonHandler.addUser);
+  if (parsedUrl.pathname === '/addBook') {
+    parseBody(request, response, jsonHandler.addBook);
+  }
+  if (parsedUrl.pathname === '/readBook') {
+    parseBody(request, response, jsonHandler.readBook);
   }
 };
 
 // a function that handles incoming requests and serves the correct content
-const onRequest = (request, response) => {
-  // determine if the request is using HTTP or HTTPS
-  const protocol = request.connection.encrypted ? 'https' : 'http';
-  const parsedUrl = new URL(
-    request.url,
-    `${protocol}://${request.headers.host}`,
-  );
+const onRequest = (req, res) => {
+  const protocol = req.connection.encrypted ? 'https' : 'http';
+  const parsedUrl = new URL(req.url, `${protocol}://${req.headers.host}`);
+  console.log(res instanceof http.ServerResponse); // Should log: true
 
-  // handle POST requests separately
-  if (request.method === 'POST') {
-    return handlePost(request, response, parsedUrl);
+  if (req.method === 'POST') {
+    return handlePost(req, res, parsedUrl);
   }
 
-  // if the requested path exists, call its handler
   if (urlStruct[parsedUrl.pathname]) {
-    return urlStruct[parsedUrl.pathname](request, response);
+    return urlStruct[parsedUrl.pathname](req, res, parsedUrl);
   }
 
-  // otherwise, return a 404 response
-  return urlStruct.notFound(request, response);
+  return urlStruct.notFound(req, res);
 };
 
 // create and start the server
