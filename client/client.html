@@ -5,7 +5,7 @@
     <link href="./style.css" rel="stylesheet" />
   </head>
   <body class="bg-hunter text-black p-6">
-    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
+    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
       <h1 class="text-2xl font-bold mb-4">Book API</h1>
 
       <label for="searchTitle" class="block font-semibold"
@@ -80,7 +80,7 @@
       <input
         type="text"
         id="searchCountry"
-        placeholder="Enter Genre"
+        placeholder="Enter Country"
         class="border p-2 rounded w-full mb-2"
       />
       <button
@@ -91,28 +91,6 @@
       </button>
       <button
         onclick="searchBookByCountry('head')"
-        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
-      >
-        Head
-      </button>
-
-      <label for="searchRead" class="block font-semibold mt-4"
-        >Search Book by marked Read:</label
-      >
-      <input
-        type="text"
-        id="searchRead"
-        placeholder="Enter Genre"
-        class="border p-2 rounded w-full mb-2"
-      />
-      <button
-        onclick="searchBookByRead('get')"
-        class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
-      >
-        Get
-      </button>
-      <button
-        onclick="searchBookByRead('head')"
         class="bg-sage hover:bg-coffee text-white px-4 py-2 rounded"
       >
         Head
@@ -234,7 +212,7 @@
         if (parseResponse && response.status === 200) {
           obj = await response.json();
           console.log(obj);
-          content.innerHTML += `<p>${JSON.stringify(obj)}</p>`;
+          content.innerHTML += `<div class="block font-semibold mt-4"> <p>${JSON.stringify(obj)}</p> </div>`;
         } else if (response.status !== 204) {
           obj = await response.json();
           console.log(obj);
@@ -263,25 +241,11 @@
         if (method == "get") {
           response = await fetch(`/getBookByAuthor?author=${author}`);
         } else {
-          response = await fetch(
-            `/getBookByAuthor?author=${author}, { method: 'HEAD' }`
-          );
+          response = await fetch(`/getBookByAuthor?author=${author}`, {
+            method: "HEAD",
+          });
         }
         await handleResponse(response, method === "get");
-      }
-
-      async function searchBookByRead(method) {
-        const read = document.getElementById("searchRead").value;
-        let response;
-        if (method == "get") {
-          response = await fetch(`/getBookByRead?read=${read}`);
-        } else {
-          response = await fetch(
-            `/getBookByRead?read=${read}, { method: 'HEAD' }`
-          );
-        }
-        await handleResponse(response, method === "get");
-
       }
 
       async function searchBookByGenre(method) {
@@ -290,9 +254,9 @@
         if (method == "get") {
           response = await fetch(`/getBookByGenre?genre=${genre}`);
         } else {
-          response = await fetch(
-            `/getBookByGenre?genre=${genre}, { method: 'HEAD' }`
-          );
+          response = await fetch(`/getBookByGenre?genre=${genre}`, {
+            method: "HEAD",
+          });
         }
         await handleResponse(response, method === "get");
 
@@ -304,9 +268,9 @@
         if (method == "get") {
           response = await fetch(`/getBookByCountry?country=${country}`);
         } else {
-          response = await fetch(
-            `/getBookByCountry?country=${country}, { method: 'HEAD' }`
-          );
+          response = await fetch(`/getBookByCountry?country=${country}`, {
+            method: "HEAD",
+          });
         }
         await handleResponse(response, method === "get");
 
